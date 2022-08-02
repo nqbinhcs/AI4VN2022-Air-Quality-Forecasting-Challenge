@@ -1,86 +1,53 @@
-
-import numpy as np
-import pandas as pd
-import lightgbm as lgb
-import statsmodels.api as sm
-import matplotlib.pyplot as plt
-import xgboost as xgb
-import lightgbm
-from sklearn.model_selection import train_test_split
+import pprint
+import argparse
+import yaml
 import os
-import warnings
 
-# def custom_asymmetric_train(y_true, y_pred):
-#     residual = (y_true-y_pred).astype("float")
-#     grad = np.where(residual < 0, -2*10.0*residual, -2*residual)
-#     hess = np.where(residual < 0, 2*10.0, 2.0)
-#     return grad, hess
-
-# def custom_asymmetric_valid(y_true, y_pred):
-#     residual = (y_true-y_pred).astype("float")
-#     loss = np.where(residual < 0, (residual**2)*10.0, residual**2)
-#     return "custom_asymmetric_eval", np.mean(loss), False
-
-def train(X, y, dir_save_model):
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, np.array(y), test_size=0.1, random_state=1)
-
-    # best learning rate 0.1, test size = 0.2
-    model = xgb.XGBRegressor(n_estimators=200,
-                             max_depth=7,
-                             max_features='auto',
-                             min_samples_split=7,
-                             min_samples_leaf=3,
-                             learning_rate=0.15)
-
-    # stopping 20                             
-    model.fit(X_train, y_train,
-            eval_set=[(X_train, y_train), (X_test, y_test)],
-            early_stopping_rounds=20)
-
-    # model = lightgbm.LGBMRegressor()
-
-    # # updating objective function to custom
-    # # default is "regression"
-    # # also adding metrics to check different scores
-    # model.set_params(**{'objective': custom_asymmetric_train},
-    #             metrics=["mse", 'mae'])
-
-    # # fitting model
-    # model.fit(
-    #     X_train,
-    #     y_train,
-    #     eval_set=[(X_test, y_test)],
-    #     eval_metric=custom_asymmetric_valid,
-    #     verbose=False,
-    # )
+# from torchan.utils.random_seed import set_determinism
+# from torchan.utils.getter import get_data
+from data.load_data import load_data
+from trainer.trainer import Trainer
+# from torchan.trainers import SupervisedTrainer
 
 
-    print('Saving model...')
-    print('Model is saved in', dir_save_model)
-    os.makedirs(os.path.dirname(dir_save_model), exist_ok=True)
-    model.save_model(dir_save_model)
+def train(config):
+    assert config is not None, "Do not have config file!"
+
+    pprint.PrettyPrinter(indent=2).pprint(config)
+
+    is_save_config = True
+    # train 11 models
+    # each model of station is trained
+    for file_train in os.listdir(config['dataset']['train']['args']['path']):
+        save_dir_model = os.path.join(
+            config['trainer']['model_dir'], file_train[:-4] + '.json')
+
+        # 1: Load datasets
+        data_path = os.path.join(
+            config['dataset']['train']['args']['path'], file_train)
+
+        X_train, X_valid, y_train, y_valid = load_data(
+            data_path=data_path, test_size=config['dataset']['train']['args']['ratio'])
+
+        # 2: Create trainer
+        trainer = Trainer(config)
+
+        # 3: Start trainining
+        trainer.train(
+            (X_train, y_train), (X_valid, y_valid), save_dir_model, is_save_config)
+
+        # No needed to save config file of model, because 11 models have the same config file
+        is_save_config = False
 
 
-def load_data(data_dir):
-    df = pd.read_csv(data_dir)
-    data = df['PM2.5'].values
-    X_data = []
-    y_data = []
-    for i in range(len(data) - 169):
-        X_data.append(data[i:i+168])
-        y_data.append(data[i+168])
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config')
 
-    return X_data, y_data
+    args = parser.parse_args()
 
+    config_path = args.config
+    config = yaml.load(open(config_path, 'r'), Loader=yaml.Loader)
 
-TRAINING_DATA_PATH = 'data/processed/data-train/input'
-
-def main():
-    for file_name in os.listdir(TRAINING_DATA_PATH):
-        save_dir = os.path.join('saved/models', file_name[:-4] + '.json')
-        X, y = load_data(os.path.join(TRAINING_DATA_PATH, file_name))
-        train(X, y, save_dir)
-
-if __name__ == '__main__':
-    main()
+    # print(config['dataset'])
+    train(config)

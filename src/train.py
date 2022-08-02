@@ -3,11 +3,9 @@ import argparse
 import yaml
 import os
 
-# from torchan.utils.random_seed import set_determinism
-# from torchan.utils.getter import get_data
 from data.load_data import load_data
 from trainer.trainer import Trainer
-# from torchan.trainers import SupervisedTrainer
+
 
 
 def train(config):

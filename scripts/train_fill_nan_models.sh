@@ -1,0 +1,1 @@
+python src/data/fill_nan_models/train.py --config_file config/config_fill_nan_model.yaml

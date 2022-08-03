@@ -1,0 +1,22 @@
+dataset:
+  train:
+    args:
+      paths:
+      - data/raw/data-train/input
+      - data/raw/data-train/output
+      ratio: 0.4
+    name: data-train
+id: sample
+model:
+  args:
+    learning_rate: 0.3
+    max_depth: 7
+    max_features: auto
+    min_samples_leaf: 3
+    min_samples_split: 7
+    n_estimators: 200
+  name: XGBoost
+seed: 3698
+trainer:
+  log_dir: saved/logs_fill_nan_models
+  model_dir: saved/fill_nan_models

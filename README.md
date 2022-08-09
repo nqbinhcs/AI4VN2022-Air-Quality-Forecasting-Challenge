@@ -27,3 +27,13 @@
 |
 └── src                <- Source code for use in this project.
 ```
+### Command
+Training
+```
+python src/train.py --config config/config.yaml
+```
+
+Inference result
+```
+python src/inference.py --config config/config.yaml
+```

@@ -29,6 +29,7 @@ def train(config):
         X_train, X_valid, y_train, y_valid = load_data(
             data_path=data_path, test_size=config['dataset']['train']['args']['ratio'])
 
+
         # 2: Create trainer
         trainer = Trainer(config)
 

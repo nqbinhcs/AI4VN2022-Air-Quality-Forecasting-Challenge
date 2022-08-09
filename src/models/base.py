@@ -1,13 +1,20 @@
+from abc import abstractmethod
 
+class BaseModel():
+    @abstractmethod
+    def fit(self, *inputs):
+        """
+        Forward pass logic
 
-class BaseClassifier(nn.Module):
-    def __init__(self, extractor_cfg, nclasses):
-        super().__init__()
-        self.nclasses = nclasses
-        self.extractor = getter.get_instance(extractor_cfg)
-        self.feature_dim = self.extractor.feature_dim
-        self.classifier = nn.Linear(self.feature_dim, self.nclasses)
+        :return: Model output
+        """
+        raise NotImplementedError
 
-    def forward(self, x):
-        x = self.extractor.get_embedding(x)
-        return self.classifier(x)
+    @abstractmethod
+    def save_model(self, *inputs):
+        """
+        Forward pass logic
+
+        :return: Model output
+        """
+        raise NotImplementedError

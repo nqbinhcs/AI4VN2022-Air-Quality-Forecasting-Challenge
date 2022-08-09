@@ -1,0 +1,28 @@
+dataset:
+  inference:
+    args:
+      Kneighbor: 4
+      path: data/processed/public-test/input
+    name: public-test
+  train:
+    args:
+      path: data/processed/data-train/input
+      ratio: 0.2
+    name: data-train
+id: sample
+model:
+  args:
+    colsample_bytree: 0.8670901795728172
+    gamma: 18
+    learning_rate: 0.22128746524129203
+    max_depth: 4
+    max_features: 3
+    min_samples_leaf: 6
+    min_samples_split: 5
+    n_estimators: 670
+    subsample: 0.772298083242074
+  name: XGBoost
+seed: 3698
+trainer:
+  log_dir: saved/log
+  model_dir: saved/models

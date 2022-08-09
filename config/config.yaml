@@ -8,20 +8,31 @@ model:
         max_features: 'auto'
         min_samples_split: 7
         min_samples_leaf: 3
-        learning_rate: 0.3
+        learning_rate: 0.15
+        # n_estimators: 670 
+        # max_depth: 4
+        # max_features: 3
+        # min_samples_split: 5
+        # min_samples_leaf: 6
+        # learning_rate: 0.22128746524129203 
+        # subsample: 0.772298083242074 
+        # colsample_bytree: 0.8670901795728172 
+        # gamma: 18
+
 
 dataset:
     train:
         name: data-train
         args:
             path: 'data/processed/data-train/input'
-            ratio: 0.4
+            # path: 'data/processed_new_fill_nan/data-train/input'
+            ratio: 0.2
         
     inference:
         name: public-test
         args:
             path: 'data/processed/public-test/input'
-            Kneighbor: 4
+            Kneighbor: 9
     
 trainer:
     log_dir: saved/log

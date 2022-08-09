@@ -24,7 +24,6 @@ class Trainer:
     def load_config_dict(self, config):
         self.model = get_instance(config['model'])
 
-    
     def save_config(self, path):
         with open(path, 'w') as yaml_file:
             yaml.dump(self.config, yaml_file, default_flow_style=False)

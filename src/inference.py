@@ -13,7 +13,7 @@ import os
 from tqdm import tqdm
 import warnings
 
-TEST_DIR = 'data/processed/public-test/input'
+test_dir = 'data/processed/public-test/input'
 
 
 def load_input_data(data_dir):
@@ -48,15 +48,11 @@ def generate_forcast_in_n_hour(model, history, hour=24):
 
         _history = np.array(_temp).reshape(1, -1)
 
-        # print(_)
-        # print(_history)
-
     return preds
 
 
-# best neighbor 5
 def forcast_day_based_on_neighbor(X, y, features, Kneighbor):
-    neigh = KNeighborsRegressor(n_neighbors=Kneighbor)
+    neigh = KNeighborsRegressor(n_neighbors=Kneighbor, weights = 'distance', n_jobs = -1)
     neigh.fit(X, y)
     return neigh.predict(features)
 
@@ -74,29 +70,28 @@ def to_submission(k_fold, list_df):
 def inference(config):
 
     models = load_models()
-    # print(models.keys())
-    for k_dir in tqdm(os.listdir(TEST_DIR)):
+
+    test_dir = config['dataset']['inference']['args']['path']
+
+    print('Inferencing...')
+    for k_dir in tqdm(os.listdir(test_dir)):
         # data per fold
         data = pd.read_csv('data/raw/data-train/location.csv')
 
         data = data.assign(T1="", T2="", T3="", T4="", T5="", T6="", T7="", T8="", T9="", T10="", T11="", T12="",
                            T13="", T14="", T15="", T16="", T17="", T18="", T19="", T20="", T21="", T22="", T23="", T24="",)
 
-        for file_name in os.listdir(os.path.join(TEST_DIR, k_dir)):
+        for file_name in os.listdir(os.path.join(test_dir, k_dir)):
             model_name = file_name[:-4]
-            full_file_name = os.path.join(TEST_DIR, k_dir, file_name)
+            full_file_name = os.path.join(test_dir, k_dir, file_name)
             input_data = load_input_data(full_file_name)
             # print(input_data.shape)
             result = generate_forcast_in_n_hour(models[model_name], input_data)
 
             data.loc[data['station'] == model_name, -24:] = result
 
-        # for target_station in data['station']
-
-        # print(data.tail(4))
         target_stations = data['station'].tolist()[-4:]
         for idx, target_station in enumerate(target_stations):
-            #   print(target_station, data.loc[data['station'] == target_station])
             lon = data.loc[data['station'] == target_station]['longitude'].tolist()[
                 0]
             lat = data.loc[data['station'] == target_station]['latitude'].tolist()[
@@ -110,9 +105,9 @@ def inference(config):
                 data.loc[data['station'] == target_station,
                          Tday] = forcast_day_based_on_neighbor(X, y, target_feature, config['dataset']['inference']['args']['Kneighbor'])
         list_df = [data.iloc[i, -24:] for i in range(10, 14)]
-        # print(k_dir)
+        
         to_submission(k_dir, list_df)
-        # break
+        
 
 
 if __name__ == '__main__':

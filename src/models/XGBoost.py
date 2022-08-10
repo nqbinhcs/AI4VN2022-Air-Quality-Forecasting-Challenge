@@ -42,3 +42,6 @@ class XGBoost(BaseModel):
 
     def load_model(self, dir):
         self.model.load_model(dir)
+
+    def predict(self, X):
+        return self.model.predict(X)

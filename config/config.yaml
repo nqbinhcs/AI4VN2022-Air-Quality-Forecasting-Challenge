@@ -2,22 +2,22 @@ id: sample
 seed: 3698
 
 model:
-  # name: XGBoost
-  # args:
-  #   n_estimators: 200
-  #   max_depth: 7 #7
-  #   max_features: "auto"
-  #   min_samples_split: 7
-  #   min_samples_leaf: 3
-  #   learning_rate: 0.17 #0.17
-  #   gamma: 1
-  #   reg_alpha: 0
-  #   reg_lambda: 1
+  name: XGBoost
+  args:
+    n_estimators: 500 #200
+    max_depth: 7 #7
+    max_features: "auto"
+    min_samples_split: 7
+    min_samples_leaf: 3
+    learning_rate: 0.01 #0.17
+    gamma: 1
+    reg_alpha: 0
+    reg_lambda: 1
 
   # name: CatBoost
   # args:
   #   iterations: 500
-  #   learning_rate: 0.01
+  #   learning_rate: 0.05 #0.01
   #   depth: 10
   #   eval_metric: "RMSE"
   #   bagging_temperature: 0.2
@@ -27,8 +27,8 @@ model:
   #   # task_type: "GPU"
   #   # devices: '0:1'
 
-  name: LSTM
-  args:
+  # name: LSTM
+  # args:
 
 dataset:
   train:

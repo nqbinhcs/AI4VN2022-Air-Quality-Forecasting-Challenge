@@ -1,7 +1,14 @@
 from models.base import BaseModel
 from keras.models import Sequential
-from keras.layers import LSTM
+from keras.layers import LSTM as LSTML
 from keras.layers import Dense
+import keras
+import numpy as np
+import tensorflow as tf
+
+
+def custom_mean_squared_error(y_true, y_pred):
+    return tf.math.reduce_mean(tf.square(y_true - y_pred))
 
 
 class LSTM(BaseModel):
@@ -9,23 +16,46 @@ class LSTM(BaseModel):
         self.n_steps = 168
         self.n_features = 1
         self.model = Sequential()
-        self.model.add(LSTM(50, activation='relu', return_sequences=True,
-                            input_shape=(self.n_steps, self.n_features)))
-        self.model.add(LSTM(50, activation='relu'))
+        self.model.add(LSTML(50, activation='relu', return_sequences=True,
+                             input_shape=(self.n_steps, self.n_features)))
         self.model.add(Dense(1))
-        self.model.compile(optimizer='adam', loss='mse')
+        self.model.compile(optimizer='adam', loss=custom_mean_squared_error)
+
+        self.callbacks = [
+            keras.callbacks.EarlyStopping(
+                # Stop training when `val_loss` is no longer improving
+                monitor="val_loss",
+                # "no longer improving" being defined as "no better than 1e-2 less"
+                min_delta=1e-2,
+                # "no longer improving" being further defined as "for at least 2 epochs"
+                patience=2,
+                verbose=1,
+            )
+        ]
 
     def fit(self, X, y, eval_set, early_stopping_rounds):
+
+        X = np.array(X)
+        y = np.array(y)
+        X = X.reshape((X.shape[0], X.shape[1], self.n_features))
+
+        X_valid, y_valid = eval_set[0]
+        X_valid = np.array(X_valid)
+        y_valid = np.array(y_valid)
+        X_valid = X_valid.reshape(
+            (X_valid.shape[0], X_valid.shape[1], self.n_features))
+
         self.model.fit(X, y,
-                       epoch=200,
-                       verbose=100
+                       validation_data=(X_valid, y_valid),
+                       callbacks=self.callbacks,
+                       epochs=2,
                        )
 
     def save_model(self, save_dir_model):
-        self.model.save_model(save_dir_model, format="json")
+        self.model.save_weights(save_dir_model)
 
     def load_model(self, dir):
-        self.model.load_model(dir, "json")
+        self.model = self.model.load_weights(dir)
 
     def predict(self, X):
         return self.model.predict(X)

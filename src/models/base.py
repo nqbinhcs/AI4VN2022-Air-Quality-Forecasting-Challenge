@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+
 class BaseModel():
     @abstractmethod
     def fit(self, *inputs):
@@ -12,6 +13,24 @@ class BaseModel():
 
     @abstractmethod
     def save_model(self, *inputs):
+        """
+        Forward pass logic
+
+        :return: Model output
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def load_model(self, *inputs):
+        """
+        Forward pass logic
+
+        :return: Model output
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def predict(self, *inputs):
         """
         Forward pass logic
 

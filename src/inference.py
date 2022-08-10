@@ -12,8 +12,7 @@ import yaml
 import os
 from tqdm import tqdm
 import warnings
-
-test_dir = 'data/processed/public-test/input'
+from utils.getter import get_instance
 
 
 def load_input_data(data_dir):
@@ -22,11 +21,11 @@ def load_input_data(data_dir):
     return data
 
 
-def load_models():
+def load_models(config):
     models = dict()
     saved_dir = 'saved/models'
     for model_name in os.listdir(saved_dir):
-        model = xgb.XGBRegressor()
+        model = get_instance(config['model'])
         model.load_model(os.path.join(saved_dir, model_name))
         models[model_name[:-5]] = model
         print(f'Loaded model {model_name[:-5]}')
@@ -69,7 +68,7 @@ def to_submission(k_fold, list_df):
 
 def inference(config):
 
-    models = load_models()
+    models = load_models(config)
 
     test_dir = config['dataset']['inference']['args']['path']
 

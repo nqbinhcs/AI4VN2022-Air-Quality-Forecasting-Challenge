@@ -9,6 +9,10 @@ __pycache__/
 results/*
 data/processed/*
 prediction.zip
+catboost_info
+data/processed_interpolate
+saved/models/*
+log.txt
 
 # Distribution / packaging
 .Python

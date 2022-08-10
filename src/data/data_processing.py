@@ -22,8 +22,6 @@ from tqdm import tqdm
 sns.set()
 warnings.filterwarnings(action='ignore')
 
-INPUT_PATH = 'data/raw/public-test/input'
-
 
 def create_date_features(df):
     df['month'] = df.timestamp.dt.month
@@ -38,12 +36,16 @@ def create_date_features(df):
     df['is_month_end'] = df.timestamp.dt.is_month_end.astype(int)
     return df
 
+
 def process_data(input_file_path, output_file_path):
     df = pd.read_csv(input_file_path)
     df = df.iloc[:, 1:]
 
     df['timestamp'] = pd.to_datetime(df['timestamp'])
-    df['PM2.5'].fillna(value = df['PM2.5'].mean(), inplace = True)
+    # df['PM2.5'].fillna(value = df['PM2.5'].mean(), inplace = True)
+    df['PM2.5'] = df['PM2.5'].interpolate(option="time")
+    # df['PM2.5'] = df['PM2.5'].bfill()
+
     df['humidity'].fillna(value=df['humidity'].mean(), inplace=True)
     df['temperature'].fillna(value=df['temperature'].mean(), inplace=True)
 
@@ -61,19 +63,29 @@ def process_data(input_file_path, output_file_path):
     os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
     df.to_csv(output_file_path, index=False)
 
-def main():
-    output_path = INPUT_PATH.replace('raw', 'processed')
-    for dir in os.listdir(INPUT_PATH):
-        for file_name in os.listdir(os.path.join(INPUT_PATH, dir)):
-            input_file_name = os.path.join(INPUT_PATH, dir, file_name)
-            output_file_path = os.path.join(output_path, dir, file_name)
-            process_data(input_file_name, output_file_path)
 
-    # for file_name in tqdm(os.listdir(INPUT_PATH)):
-    #     input_file_name = os.path.join(INPUT_PATH, file_name)
-    #     output_file_path = os.path.join(output_path, file_name)
-    #     process_data(input_file_name, output_file_path)
+def main():
+
+    for folder in ['data-train', 'public-test']:
+        input_path = 'data/raw/{}/input'.format(folder)
+        print(f'Preprocessing {input_path}...')
+
+        output_path = input_path.replace('raw', 'processed_interpolate')
+
+        if folder == 'data-train':
+            for file_name in tqdm(os.listdir(input_path)):
+                input_file_name = os.path.join(input_path, file_name)
+                output_file_path = os.path.join(output_path, file_name)
+                process_data(input_file_name, output_file_path)
+
+        else:
+            for dir in tqdm(os.listdir(input_path)):
+                for file_name in os.listdir(os.path.join(input_path, dir)):
+                    input_file_name = os.path.join(input_path, dir, file_name)
+                    output_file_path = os.path.join(
+                        output_path, dir, file_name)
+                    process_data(input_file_name, output_file_path)
+
 
 if __name__ == '__main__':
     main()
-

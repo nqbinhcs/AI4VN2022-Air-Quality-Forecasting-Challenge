@@ -16,7 +16,7 @@ def load_data(data_path, test_size):
     # Split with ratio
     # best 10
     X_train, X_valid, y_train, y_valid = train_test_split(
-        X_data, np.array(y_data), test_size=test_size, random_state=10, shuffle=False)
+        X_data, np.array(y_data), test_size=test_size, random_state=1024, shuffle=False)
 
     return X_train, X_valid, y_train, y_valid
 

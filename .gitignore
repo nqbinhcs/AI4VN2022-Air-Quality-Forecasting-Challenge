@@ -13,6 +13,7 @@ catboost_info
 data/processed_interpolate
 saved/models/*
 log.txt
+inference_ensemble.py
 
 # Distribution / packaging
 .Python

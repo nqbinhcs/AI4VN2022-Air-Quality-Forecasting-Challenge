@@ -1,14 +1,12 @@
+from utils.getter import get_instance
+from tqdm import tqdm
+import yaml
+import numpy as np
+from datetime import datetime
+import os
 import sys
 sys.path.append(".")
 
-import os
-from datetime import datetime
-
-import numpy as np
-import yaml
-from tqdm import tqdm
-
-from utils.getter import get_instance
 
 class Trainer:
     def __init__(self, config):
@@ -29,22 +27,21 @@ class Trainer:
             yaml.dump(self.config, yaml_file, default_flow_style=False)
 
     def train(self, train_dataloader, val_dataloader, save_dir_model, is_save_config):
-        
+
         X_train, y_train = train_dataloader
         X_valid, y_valid = val_dataloader
 
-
         # 20
         self.model.fit(X_train, y_train,
-                  eval_set=[(X_train, y_train), (X_valid, y_valid)],
-                  early_stopping_rounds=20)
+                       eval_set=[(X_train, y_train), (X_valid, y_valid)],
+                       early_stopping_rounds=20)
 
         # self.model.fit(X_train, y_train,
         #                eval_set=(X_valid, y_valid),
         #                early_stopping_rounds=20)
 
-
         # Save model
+
         print('Saving model...')
         print('Model is saved in', save_dir_model)
         os.makedirs(os.path.dirname(save_dir_model), exist_ok=True)
@@ -56,4 +53,3 @@ class Trainer:
                 'saved', 'logs', self.train_id, 'config.yaml')
             os.makedirs(os.path.dirname(path_config), exist_ok=True)
             self.save_config(path_config)
-

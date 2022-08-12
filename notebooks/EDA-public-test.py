@@ -14,13 +14,17 @@ sns.set()
 warnings.filterwarnings(action='ignore')
 
 
-# In[14]:
+# In[5]:
+
+
+
+# In[2]:
 
 
 DATA_PATH = 'data/processed_interpolate/public-test/input'
 
 
-# In[15]:
+# In[7]:
 
 
 def count_null_value(file_name):
@@ -31,7 +35,7 @@ def count_null_value(file_name):
     return na_25
 
 
-# In[16]:
+# In[8]:
 
 
 for subfolder in os.listdir(DATA_PATH):

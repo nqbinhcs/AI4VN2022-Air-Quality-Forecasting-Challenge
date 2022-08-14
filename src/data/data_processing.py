@@ -42,8 +42,9 @@ def process_data(input_file_path, output_file_path):
     df = df.iloc[:, 1:]
 
     df['timestamp'] = pd.to_datetime(df['timestamp'])
-    # df['PM2.5'].fillna(value = df['PM2.5'].mean(), inplace = True)
-    df['PM2.5'] = df['PM2.5'].interpolate(option="time")
+    df['PM2.5'].fillna(value=df['PM2.5'].mean(), inplace=True)
+
+    # df['PM2.5'] = df['PM2.5'].interpolate(option="time")
     # df['PM2.5'] = df['PM2.5'].bfill()
 
     df['humidity'].fillna(value=df['humidity'].mean(), inplace=True)
@@ -66,11 +67,13 @@ def process_data(input_file_path, output_file_path):
 
 def main():
 
-    for folder in ['data-train', 'public-test']:
-        input_path = 'data/raw/{}/input'.format(folder)
+    for folder in ['train', 'public-test']:
+        # input_path = 'data/raw/{}/input'.format(folder)
+        input_path = 'data/{}/raw/input'.format(folder)
+
         print(f'Preprocessing {input_path}...')
 
-        output_path = input_path.replace('raw', 'processed_interpolate')
+        output_path = input_path.replace('raw', 'processed')
 
         if folder == 'data-train':
             for file_name in tqdm(os.listdir(input_path)):

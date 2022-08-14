@@ -1,0 +1,36 @@
+method_name: 'xgb'
+seed: 3698
+models:
+    XGBoost:
+        name: 'XGBoost'
+        result_ratio: 1.0
+        args:
+            n_estimators: 200
+            max_depth: 7
+            max_features: 'auto'
+            min_samples_split: 7
+            min_samples_leaf: 3
+            learning_rate: 0.3
+    LightGBM:
+        name: 'LightGBM'
+        result_ratio: 0.0
+        args:
+            n_estimators: 200
+            max_depth: 7
+            max_features: 'auto'
+            min_samples_split: 7
+            min_samples_leaf: 3
+            learning_rate: 0.3
+
+dataset:
+    train:
+        name: data-train
+        args:
+            path: 'data/train/processed/input'
+            split_ratio: 0.1
+        
+    test:
+        name: public-test
+        args:
+            path: 'data/public-test/processed/input'
+            n_neighbor: 5

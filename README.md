@@ -1,39 +1,35 @@
-### The directory structure
+# AI4VN 2022 - Air Quality Forecasting Challenge
+## Team: LQDBD
+- Nguyễn Tiến Hưng
+- Nguyễn Quang Bình
+- Nguyễn Hữu Đạt
+- Lê Minh Tú
 
+## Hướng dẫn reproduce lại kết quả
+Đầu tiên, tiến hành build Docker image
 ```
-├── README.md          <- The top-level README for developers using this project.
-│
-├── data
-│   ├── raw            <- The original, immutable data dump.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── external       <- Data from third party sources.
-│
-├── saved             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is task name SHKPA-XX (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `SHKPA-67-mms-test-LSTM-model-on-all-electrolyses`.
-│
-├── docs               <- Questions and some other related documentation
-│
-├── results            <- submission.
-├── config            <- config file.
-│
-├── .gitignore         <- Avoids uploading data, credentials, outputs, system files etc
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-|
-└── src                <- Source code for use in this project.
-```
-### Command
-Training
-```
-python src/train.py --config config/config.yaml
+docker build -t <tên image> .
 ```
 
-Inference result
+Sau khi quá trình build Docker image hoàn tất, vui lòng chỉnh sửa file `run_container.sh` để tiến hành mount các folder chứa dữ liệu cần thiết:
+- folder data-train
+- folder public-test
+- folder chứa file zip kết quả prediction (`prediction.zip`)
+
+Lưu ý: khi mount cần mount trực tiếp vào folder cha, ví dụ khi data trên máy được lưu có cấu trúc:
 ```
-python src/inference.py --config config/config.yaml
+ai4vn-aqf
+├── data-train
+    ├── input/
+    ├── output/
+    └── location.csv
 ```
+Thì cần mount như sau: `/ai4vn-aqf/data-train/:/data/train/raw/`
+
+Khi đã hoàn tất mount folder thì có thể tiến hành chạy docker container
+```
+sh run_container.sh
+```
+
+
+

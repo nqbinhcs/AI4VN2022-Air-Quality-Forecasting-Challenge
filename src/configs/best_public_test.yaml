@@ -1,0 +1,29 @@
+method_name: 'xgboost_best'
+seed: 3698
+models:
+    XGBoost:
+        name: 'XGBoost'
+        result_ratio: 0.5
+        args:
+            n_estimators: 500 #200
+            max_depth: 7 #7
+            max_features: "auto"
+            min_samples_split: 7
+            min_samples_leaf: 3
+            learning_rate: 0.01 #0.17
+            gamma: 1
+            reg_alpha: 0
+            reg_lambda: 1
+
+dataset:
+    train:
+        name: data-train
+        args:
+            path: 'data/train/preprocessed/'
+            split_ratio: 0.22
+        
+    test:
+        name: public-test
+        args:
+            path: 'data/public-test/preprocessed/'
+            n_neighbor: 4

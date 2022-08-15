@@ -6,14 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
-results/*
-data/processed/*
 prediction.zip
 catboost_info
-data/processed_interpolate
 saved/models/*
 log.txt
-inference_ensemble.py
+
 
 # Distribution / packaging
 .Python

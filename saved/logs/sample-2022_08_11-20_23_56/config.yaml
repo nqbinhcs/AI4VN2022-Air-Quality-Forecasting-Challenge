@@ -1,0 +1,27 @@
+dataset:
+  inference:
+    args:
+      Kneighbor: 4
+      path: data/processed/public-test/input
+    name: public-test
+  train:
+    args:
+      path: data/processed/data-train/input
+      ratio: 0.22
+    name: data-train
+id: sample
+model:
+  args:
+    bagging_temperature: 0.2
+    depth: 10
+    eval_metric: RMSE
+    iterations: 500
+    learning_rate: 0.05
+    metric_period: 50
+    od_type: Iter
+    od_wait: 20
+  name: CatBoost
+seed: 3698
+trainer:
+  log_dir: saved/log
+  model_dir: saved/models

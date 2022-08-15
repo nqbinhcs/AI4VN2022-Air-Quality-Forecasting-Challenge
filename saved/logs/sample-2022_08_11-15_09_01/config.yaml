@@ -1,0 +1,19 @@
+dataset:
+  inference:
+    args:
+      Kneighbor: 4
+      path: data/processed/public-test/input
+    name: public-test
+  train:
+    args:
+      path: data/processed/data-train/input
+      ratio: 0.22
+    name: data-train
+id: sample
+model:
+  args: {}
+  name: LSTM
+seed: 3698
+trainer:
+  log_dir: saved/log
+  model_dir: saved/models

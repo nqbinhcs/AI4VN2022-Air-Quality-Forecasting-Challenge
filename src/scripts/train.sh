@@ -1,0 +1,1 @@
+python3 tools/train.py --config_path configs/best_public_test.yaml --saved_runs_folder saved

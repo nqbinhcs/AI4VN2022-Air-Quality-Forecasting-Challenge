@@ -1,7 +1,7 @@
 from air_forecaster.models.lightgbm import *
 from air_forecaster.models.xgboost import *
 from air_forecaster.models.catboost import *
-#from air_forecaster.models.LSTM import *
+from air_forecaster.models.lstm import *
 
 def get_instance(config, **kwargs):
     assert 'name' in config

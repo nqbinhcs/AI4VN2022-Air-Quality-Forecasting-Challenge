@@ -1,0 +1,23 @@
+method_name: 'lstm'
+seed: 3698
+models:
+    LSTM:
+        name: 'LSTM'
+        result_ratio: 1.2
+        args:
+            n_steps_in: 168
+            n_steps_out: 24
+            n_features: 3
+
+dataset:
+    train:
+        name: data-train
+        args:
+            path: 'data/train/preprocessed/'
+            split_ratio: 0.3
+        
+    test:
+        name: public-test
+        args:
+            path: 'data/public-test/preprocessed/'
+            n_neighbor: 4

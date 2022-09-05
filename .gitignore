@@ -9,6 +9,8 @@ __pycache__/
 results/*
 saved/*
 log.txt
+data/final-output/*
+data/final-results/*
 
 # Distribution / packaging
 .Python

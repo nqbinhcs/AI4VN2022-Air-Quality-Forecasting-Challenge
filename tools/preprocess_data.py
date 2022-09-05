@@ -54,6 +54,17 @@ def process_data(input_file_path, output_file_path):
     df.to_csv(output_file_path, index=False)
 
 
+def process_data_interpolate(input_file_path, output_file_path):
+    df = pd.read_csv(input_file_path)
+    df = df.iloc[:, 1:]
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    df['PM2.5'].interpolate(method='linear', inplace=True)
+    df['humidity'].interpolate(method='linear', inplace=True)
+    df['temperature'].interpolate(method='linear', inplace=True)
+    os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
+    df.to_csv(output_file_path, index=False)
+
+
 def preprocess_data(args):
     data_train_folder_path = args.data_train_folder_path
     preprocessed_data_train_folder_path = args.preprocessed_data_train_folder_path
@@ -85,6 +96,7 @@ def preprocess_data(args):
             output_file_path = os.path.join(
                 preprocessed_public_test_folder_path, "input", sub_dir_name, file_name)
             process_data(input_file_path, output_file_path)
+            # process_data_interpolate(input_file_path, output_file_path)
     # copy `location.csv` file to the new preprocessed public test folder
     copy(os.path.join(public_test_folder_path, "location.csv"),
          preprocessed_public_test_folder_path)

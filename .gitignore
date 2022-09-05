@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+# dont push data folder
+
 results/*
 saved/*
 log.txt

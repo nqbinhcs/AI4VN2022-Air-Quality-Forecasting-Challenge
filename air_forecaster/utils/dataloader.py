@@ -19,7 +19,7 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
     return np.array(X), np.array(y)
 
 
-def load_data(data_path, test_size, is_full=True):
+def load_data(data_path, test_size, is_full=False):
 
     if is_full:
         df = pd.read_csv(data_path)
@@ -40,7 +40,6 @@ def load_data(data_path, test_size, is_full=True):
         # Split with ratio
         X_train, X_valid, y_train, y_valid = train_test_split(
             X_data, y_data, test_size=test_size, shuffle=False)
-
 
         print(X_data.shape, y_data.shape)
         print(X_train.shape, y_train.shape)

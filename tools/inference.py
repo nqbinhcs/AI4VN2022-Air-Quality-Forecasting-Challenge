@@ -16,14 +16,17 @@ def get_parser():
     parser.add_argument("--results_folder", default="data/final-results")
     return parser.parse_args()
 
+
 def load_config(config_path):
     config = yaml.load(open(config_path, 'r'), Loader=yaml.Loader)
     return config
+
 
 def load_input_data(data_dir):
     df = pd.read_csv(data_dir)
     data = df['PM2.5'].values.reshape(1, -1)
     return data
+
 
 def load_models(weights_folder):
     all_models = {}
@@ -42,6 +45,7 @@ def load_models(weights_folder):
             "station_models": station_models
         }
     return all_models
+
 
 def generate_forecast_in_n_hour(model, history, hour=24):
     # Recursive predict t steps
@@ -62,9 +66,11 @@ def generate_forecast_in_n_hour(model, history, hour=24):
 
 
 def forecast_day_based_on_neighbor(X, y, features, n_neighbor):
-    neigh = KNeighborsRegressor(n_neighbors=n_neighbor, weights = 'distance', n_jobs = -1)
+    neigh = KNeighborsRegressor(
+        n_neighbors=n_neighbor, weights='distance', n_jobs=-1)
     neigh.fit(X, y)
     return neigh.predict(features)
+
 
 def export_submission(k_fold, list_df, results_folder):
     for index, df in enumerate(list_df):
@@ -75,12 +81,16 @@ def export_submission(k_fold, list_df, results_folder):
         df = pd.DataFrame({'PM2.5': df.tolist()})
         df.to_csv(path, index=False)
 
+
 def inference(args):
     if (args.weights_folder == "get_latest_folder"):
-        args.weights_folder = max(glob.glob(os.path.join("saved", '*/')), key=os.path.getmtime)
-    config = load_config(os.path.join(args.weights_folder, "train_config.yaml"))
+        args.weights_folder = max(
+            glob.glob(os.path.join("saved", '*/')), key=os.path.getmtime)
+    config = load_config(os.path.join(
+        args.weights_folder, "train_config.yaml"))
     all_models = load_models(args.weights_folder)
-    test_dir = os.path.join(config['dataset']['test']['args']['path'], "input/")
+    test_dir = os.path.join(
+        config['dataset']['test']['args']['path'], "input/")
 
     print('Testing...')
     for k_dir in tqdm(os.listdir(test_dir)):
@@ -99,22 +109,26 @@ def inference(args):
                 station_name = file_name.split(".")[0]
                 full_file_name = os.path.join(test_dir, k_dir, file_name)
                 input_data = load_input_data(full_file_name)
-                result = generate_forecast_in_n_hour(station_models[station_name], input_data)
+                result = generate_forecast_in_n_hour(
+                    station_models[station_name], input_data)
 
                 data.loc[data['station'] == station_name, -24:] = result
 
             target_stations = data['station'].tolist()[-4:]
             for idx, target_station in enumerate(target_stations):
-                lon = data.loc[data['station'] == target_station]['longitude'].tolist()[0]
-                lat = data.loc[data['station'] == target_station]['latitude'].tolist()[0]
+                lon = data.loc[data['station'] == target_station]['longitude'].tolist()[
+                    0]
+                lat = data.loc[data['station'] == target_station]['latitude'].tolist()[
+                    0]
                 target_feature = [[lon, lat]]
                 for today in data.columns[4:]:
                     # Build data
-                    X = [[x, y] for x, y in zip(data['longitude'].tolist(), data['latitude'].tolist())][:11]
+                    X = [[x, y] for x, y in zip(
+                        data['longitude'].tolist(), data['latitude'].tolist())][:11]
                     y = data[today].tolist()[:11]
                     n_neighbor = config['dataset']['test']['args']['n_neighbor']
                     data.loc[data['station'] == target_station,
-                            today] = forecast_day_based_on_neighbor(X, y, target_feature, n_neighbor)
+                             today] = forecast_day_based_on_neighbor(X, y, target_feature, n_neighbor)
 
             new_list_df = [data.iloc[i, -24:] for i in range(10, 14)]
             if (list_df == []):
@@ -123,7 +137,8 @@ def inference(args):
                 for i in range(len(list_df)):
                     list_df[i] += (model_result_ratio * new_list_df[i])
         export_submission(k_dir, list_df, args.results_folder)
-        
+
+
 if __name__ == '__main__':
     args = get_parser()
     inference(args)

@@ -19,7 +19,7 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
     return np.array(X), np.array(y)
 
 
-def load_data(data_path, test_size, is_full=False):
+def load_data(data_path, test_size, is_full=True):
 
     if is_full:
         df = pd.read_csv(data_path)

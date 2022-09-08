@@ -109,7 +109,7 @@ class LSTM(BaseModel):
 
         self.lr = tf.keras.callbacks.ReduceLROnPlateau(
             monitor="val_loss", factor=0.5, patience=10, verbose=1)
-        self.es = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=60,
+        self.es = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=10,
                                                    verbose=1, mode="auto", restore_best_weights=True)
 
         # self.model.compile(loss=tf.keras.losses.Huber(),
@@ -126,8 +126,8 @@ class LSTM(BaseModel):
         data_train = tf.data.Dataset.from_tensor_slices((X, y))
         data_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid))
         data_train = data_train.shuffle(1000)
-        data_train = data_train.batch(4).prefetch(1)
-        data_valid = data_valid.batch(4).prefetch(1)
+        data_train = data_train.batch(16).prefetch(1)
+        data_valid = data_valid.batch(16).prefetch(1)
 
         def check_nan(ds):
             print('Check', ds.shape)
@@ -179,7 +179,7 @@ class LSTM(BaseModel):
         #         break
 
         history = self.model.fit(
-            data_train, epochs=20, validation_data=data_valid, callbacks=[self.lr, self.es])
+            data_train, epochs=200, validation_data=data_valid, callbacks=[self.lr, self.es])
 
     def save_model(self, save_dir_model):
         dir_cp = save_dir_model.split('.')[0]

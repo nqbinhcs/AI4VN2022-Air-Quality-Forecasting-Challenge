@@ -13,6 +13,7 @@ saved/*
 log.txt
 data/final-output/*
 data/final-results/*
+catboost_info
 
 # Distribution / packaging
 .Python

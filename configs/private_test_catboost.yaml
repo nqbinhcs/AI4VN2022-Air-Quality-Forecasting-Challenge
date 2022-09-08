@@ -1,0 +1,28 @@
+method_name: "catboost"
+seed: 3698
+models:
+  CatBoost:
+    name: "CatBoost"
+    result_ratio: 1.0
+    args:
+      iterations: 500
+      learning_rate: 0.01 #0.01
+      depth: 10
+      eval_metric: "RMSE"
+      bagging_temperature: 0.2
+      od_type: "Iter"
+      metric_period: 50
+      od_wait: 20
+
+dataset:
+  train:
+    name: data-train
+    args:
+      path: "data/private-train/preprocessed/mean-method"
+      split_ratio: 0.2
+
+  test:
+    name: public-test
+    args:
+      path: "data/public-test/processed/input"
+      n_neighbor: 5

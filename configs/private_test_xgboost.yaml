@@ -5,7 +5,7 @@ models:
     name: "XGBoost"
     result_ratio: 0.5
     args:
-      n_estimators: 500 #200
+      n_estimators: 1000 #200
       max_depth: 7 #7
       max_features: "auto"
       min_samples_split: 7

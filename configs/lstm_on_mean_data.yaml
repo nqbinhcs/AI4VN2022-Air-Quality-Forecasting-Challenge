@@ -13,7 +13,7 @@ dataset:
     train:
         name: data-train
         args:
-            path: 'data/private-train/preprocessed/interpolate-method'
+            path: 'data/private-train/preprocessed/mean-method'
             split_ratio: 0.3
         
     test:

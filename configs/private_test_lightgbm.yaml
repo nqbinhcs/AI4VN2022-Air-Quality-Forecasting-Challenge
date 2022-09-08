@@ -1,0 +1,39 @@
+method_name: 'lightgbm'
+seed: 3698
+models:
+    LightGBM:
+        name: 'LightGBM'
+        result_ratio: 1.0
+        args:
+            nthread: 10
+            max_depth: 5
+            max_features: 'auto'
+            task: 'train'
+            boosting_type: 'gbdt'
+            objective: 'regression_l1'
+            metric: 'rmse' # this is abs(a-e)/max(1,a)
+            num_leaves: 64
+            learning_rate: 0.2
+            feature_fraction: 0.9
+            bagging_fraction: 0.8
+            bagging_freq: 5
+            lambda_l1: 3.097758978478437
+            lambda_l2: 2.9482537987198496
+            verbose: 1
+            min_child_weight: 6.996211413900573
+            min_split_gain: 0.037310344962162616
+        
+
+
+dataset:
+    train:
+        name: data-train
+        args:
+            path: "data/private-train/preprocessed/mean-method"
+            split_ratio: 0.2
+        
+    test:
+        name: public-test
+        args:
+            path: 'data/public-test/processed/input'
+            n_neighbor: 5

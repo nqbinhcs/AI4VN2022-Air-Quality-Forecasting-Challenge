@@ -8,7 +8,6 @@ from shutil import copy
 from air_forecaster.utils.dataloader import load_data
 from air_forecaster.trainer import Trainer
 
-
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_path", default="config/config.yaml", help="config file path")

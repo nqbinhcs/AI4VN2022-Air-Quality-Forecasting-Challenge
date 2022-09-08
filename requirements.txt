@@ -11,3 +11,5 @@ lightgbm
 tensorflow
 catboost
 pyyaml
+pykrige
+pyinterpolate

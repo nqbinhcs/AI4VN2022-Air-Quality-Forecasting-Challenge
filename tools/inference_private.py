@@ -112,7 +112,7 @@ def forecast_day_based_on_idw(X, y, target_features):
         number_of_neighbours=-1,
         power=2.
     )
-    return idw_results + 4
+    return idw_results + 1.
 
 
 def export_submission(k_fold, list_df, results_folder):

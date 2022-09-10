@@ -97,14 +97,14 @@ def forecast_day_based_on_neighbor(X, y, features, n_neighbor):
 
 def forecast_day_based_on_idw(X, y, target_features):
     data = np.array([[X[idx][0], X[idx][1], y[idx]] for idx in range(len(X))])
-    print(data)
+    # print(data)
     idw_results = inverse_distance_weighting(
         data,
         target_features,
         number_of_neighbours=-1,
         power=2.
     )
-    return idw_results + 4
+    return idw_results
 
 
 def forecast_day_based_on_kriging(X, y, features):
@@ -154,16 +154,17 @@ def inference(args):
         # data = pd.read_csv(os.path.join(
         #     args.weights_folder, "train-location.csv"))
         data = pd.concat([data_location_input, data_location_output])
+        data.reset_index(inplace=True)
 
-        print(data.to_string())
+        # print(data.to_string())
 
         data = data.assign(T1="", T2="", T3="", T4="", T5="", T6="", T7="", T8="", T9="", T10="", T11="", T12="",
                            T13="", T14="", T15="", T16="", T17="", T18="", T19="", T20="", T21="", T22="", T23="", T24="",)
 
-        print(data['location'].tolist())
+        # print(data['location'].tolist())
         list_df = []
         for model_name in all_models:
-            print(model_name)
+            # print(model_name)
             model_result_ratio = all_models[model_name]["result_ratio"]
             station_models = all_models[model_name]["station_models"]
 
@@ -178,22 +179,24 @@ def inference(args):
                 full_file_name = os.path.join(test_dir, k_dir, file_name)
 
                 if (check_all_null(full_file_name)) or (station_name not in station_models):
+                    # print('[1] ==================>')
+                    # print('before', data['location'].tolist())
+                    # print('drop', data.index[data['location'] == station_name])
                     data = data.drop(
                         data.index[data['location'] == station_name])
-                    print('before', data['location'].tolist())
-                    print('drop', station_name)
-                    print('after', data['location'].tolist())
-                    print('====>')
+                    # print('after', data['location'].tolist())
+
 
                 else:
                     input_data = load_input_data(full_file_name)
                     result = generate_forecast_in_n_hour(
                         station_models[station_name], input_data)
+                    
                     data.loc[data['location'] == station_name, -24:] = result
 
             target_stations = data['location'].tolist()[-6:]
-            print(data['location'].tolist())
-            print(target_stations)
+            # print(data['location'].tolist())
+            # print(target_stations)
 
             for idx, target_station in enumerate(target_stations):
                 lon = data.loc[data['location'] == target_station]['longitude'].tolist()[
@@ -202,7 +205,7 @@ def inference(args):
                     0]
                 target_feature = [[lon, lat]]
 
-                print(data.to_string())
+                # print(data.to_string())
 
                 for today in data.columns[3:]:
                     # Build data
@@ -212,18 +215,18 @@ def inference(args):
                     n_neighbor = config['dataset']['test']['args']['n_neighbor']
                     # data.loc[data['location'] == target_station,
                     #          today] = forecast_day_based_on_neighbor(X, y, target_feature, n_neighbor)
-                    print("k dir", k_dir, len(data))
+                    # print("k dir", k_dir, len(data))
                     data.loc[data['location'] == target_station,
                              today] = forecast_day_based_on_idw(X, y, target_feature)
 
-            new_list_df = [data.iloc[i, -24:] for i in range(-6, 0)]
-            if (list_df == []):
-                list_df = new_list_df
-            else:
-                for i in range(len(list_df)):
-                    list_df[i] += (model_result_ratio * new_list_df[i])
+        #     new_list_df = [data.iloc[i, -24:] for i in range(-6, 0)]
+        #     if (list_df == []):
+        #         list_df = new_list_df
+        #     else:
+        #         for i in range(len(list_df)):
+        #             list_df[i] += (model_result_ratio * new_list_df[i])
 
-        export_submission(k_dir, list_df, args.results_folder)
+        # export_submission(k_dir, list_df, args.results_folder)
 
 
 if __name__ == '__main__':

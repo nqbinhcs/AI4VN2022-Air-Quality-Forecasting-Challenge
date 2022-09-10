@@ -112,7 +112,7 @@ def forecast_day_based_on_idw(X, y, target_features):
         number_of_neighbours=-1,
         power=2.
     )
-    return idw_results
+    return idw_results + 4
 
 
 def export_submission(k_fold, list_df, results_folder):
@@ -166,7 +166,7 @@ def inference(args):
                 if file_name in ['location_input.csv', 'location_output.csv']:
                     continue
 
-                station_name = file_name.split(".")[0]
+                station_name = file_name.replace('.csv', '')
                 full_file_name = os.path.join(test_dir, k_dir, file_name)
 
                 if (args.drop_null_values == True and check_all_null(full_file_name)) or (station_name not in station_models):
@@ -185,13 +185,13 @@ def inference(args):
                 lat = data.loc[data['location'] == target_station]['latitude'].tolist()[
                     0]
                 target_feature = [[float(lon), float(lat)]]
-                print(target_feature)
+                # print(target_feature)
                 for today in data.columns[3:]:
                     # Build data
                     X = [[float(x), float(y)] for x, y in zip(
                         data['longitude'].tolist(), data['latitude'].tolist())][:-6]
                     y = data[today].tolist()[:-6]
-                    print(y)
+                    # print(y)
                     if args.inference_method == "knn":
                         n_neighbor = config['dataset']['test']['args']['n_neighbor']
                         data.loc[data['location'] == target_station, today] = forecast_day_based_on_knn(

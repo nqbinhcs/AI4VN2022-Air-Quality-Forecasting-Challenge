@@ -120,6 +120,12 @@ def preprocess_data(args):
         for sub_dir in tqdm(glob.glob(os.path.join(public_test_folder_path, "input/*/"))):
             for input_file_path in glob.glob(sub_dir + "*"):
                 file_name = os.path.basename(input_file_path)
+                sub_dir_name = os.path.basename(os.path.normpath(sub_dir))
+                # print(sub_dir)
+                if (sub_dir == 'data/private-test/raw/input/4/'):
+                    print(file_name)
+                    print(os.path.join(preprocessed_public_test_folder_path,
+                          "input", sub_dir_name, file_name))
 
                 # skip processing if meteo
                 if file_name == 'meteo':
@@ -127,6 +133,7 @@ def preprocess_data(args):
 
                 # copy location
                 if file_name in ['location_input.csv', 'location_output.csv']:
+                    # print("copying ", file_name)
                     copy(os.path.join(sub_dir, file_name),
                          os.path.join(preprocessed_public_test_folder_path, "input", sub_dir_name, file_name))
                     continue

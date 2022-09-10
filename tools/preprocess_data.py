@@ -45,6 +45,7 @@ def create_date_features(df):
 
 
 def process_data_mean(input_file_path, output_file_path):
+
     df = pd.read_csv(input_file_path)
     df = df.iloc[:, 1:]
     df['timestamp'] = pd.to_datetime(df['timestamp'])
@@ -78,26 +79,26 @@ def preprocess_data(args):
     print(f'Method: {method}')
 
     # preprocessing data train
-    need_to_preprocess_sub_dirs = [
-        "input", "output"] if type == 'public-test' else ["input"]
-    for sub_dir in need_to_preprocess_sub_dirs:
-        print(f"Preprocessing files in {sub_dir} in data train...")
-        for input_file_path in tqdm(glob.glob(os.path.join(data_train_folder_path, f"{sub_dir}/*"))):
-            file_name = os.path.basename(input_file_path)
-            output_file_path = os.path.join(
-                preprocessed_data_train_folder_path, f"{sub_dir}", file_name)
+    # need_to_preprocess_sub_dirs = [
+    #     "input", "output"] if type == 'public-test' else ["input"]
+    # for sub_dir in need_to_preprocess_sub_dirs:
+    #     print(f"Preprocessing files in {sub_dir} in data train...")
+    #     for input_file_path in tqdm(glob.glob(os.path.join(data_train_folder_path, f"{sub_dir}/*"))):
+    #         file_name = os.path.basename(input_file_path)
+    #         output_file_path = os.path.join(
+    #             preprocessed_data_train_folder_path, f"{sub_dir}", file_name)
 
-            # convert to true format if private test
-            convert_to_true_format(input_file_path, type)
+    #         # convert to true format if private test
+    #         convert_to_true_format(input_file_path, type)
 
-            if method == 'interpolate':
-                process_data_interpolate(input_file_path, output_file_path)
-            elif method == 'mean':
-                process_data_mean(input_file_path, output_file_path)
+    #         if method == 'interpolate':
+    #             process_data_interpolate(input_file_path, output_file_path)
+    #         elif method == 'mean':
+    #             process_data_mean(input_file_path, output_file_path)
 
-    # copy `location.csv` file to the new preprocessed data train folder
-    copy(os.path.join(data_train_folder_path, "location.csv"),
-         preprocessed_data_train_folder_path)
+    # # copy `location.csv` file to the new preprocessed data train folder
+    # copy(os.path.join(data_train_folder_path, "location.csv"),
+    #      preprocessed_data_train_folder_path)
 
     # preprocessing public test
     # `input` files
@@ -114,6 +115,29 @@ def preprocess_data(args):
         # copy `location.csv` file to the new preprocessed public test folder
         copy(os.path.join(public_test_folder_path, "location.csv"),
              preprocessed_public_test_folder_path)
+    else:
+        print(f"Preprocessing files in data test...")
+        for sub_dir in tqdm(glob.glob(os.path.join(public_test_folder_path, "input/*/"))):
+            for input_file_path in glob.glob(sub_dir + "*"):
+                file_name = os.path.basename(input_file_path)
+
+                # skip processing if meteo
+                if file_name == 'meteo':
+                    continue
+
+                # copy location
+                if file_name in ['location_input.csv', 'location_output.csv']:
+                    copy(os.path.join(sub_dir, file_name),
+                         os.path.join(preprocessed_public_test_folder_path, "input", sub_dir_name, file_name))
+                    continue
+
+                sub_dir_name = os.path.basename(os.path.normpath(sub_dir))
+                output_file_path = os.path.join(
+                    preprocessed_public_test_folder_path, "input", sub_dir_name, file_name)
+
+                convert_to_true_format(input_file_path, type)
+                process_data_mean(input_file_path, output_file_path)
+                # process_data_interpolate(input_file_path, output_file_path)
 
 
 if __name__ == "__main__":

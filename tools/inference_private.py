@@ -19,14 +19,15 @@ def get_parser():
     parser.add_argument("--phase", default="public-test")
     parser.add_argument("--weights_folder", default="get_latest_folder")
     parser.add_argument("--results_folder", default="data/final-results")
-    parser.add_argument("--drop_null_values", default=False)
-    parser.add_argument("--inference_method", default="kriging", 
+    parser.add_argument("--inference_method", default="kriging",
                         help="Available methods: knn, kriging, idw")
     return parser.parse_args()
+
 
 def load_config(config_path):
     config = yaml.load(open(config_path, 'r'), Loader=yaml.Loader)
     return config
+
 
 def load_input_data(data_dir, use_lstm):
     if use_lstm:
@@ -46,6 +47,7 @@ def load_input_data(data_dir, use_lstm):
         data = df['PM2.5'].values.reshape(1, -1)
         return data
 
+
 def load_models(weights_folder):
     all_models = {}
     config = load_config(os.path.join(weights_folder, "train_config.yaml"))
@@ -64,6 +66,7 @@ def load_models(weights_folder):
         }
     return all_models
 
+
 def check_all_null(data_dir):
     df = pd.read_csv(data_dir)
     null_pm25 = df['PM2.5'].isnull().sum()
@@ -73,10 +76,10 @@ def check_all_null(data_dir):
             null_temperature == len(df['temperature']) or
             null_humidity == len(df['humidity']))
 
+
 def generate_forecast_in_n_hour(model, history, use_lstm, hour=24):
     # Recursively predict t steps
     if use_lstm:
-        print("Prediction")
         y_hat = [x[2] for x in model.predict(history).tolist()[0]]
         return y_hat
     else:
@@ -91,8 +94,10 @@ def generate_forecast_in_n_hour(model, history, use_lstm, hour=24):
             _history = np.array(_temp).reshape(1, -1)
         return predictions
 
+
 def forecast_day_based_on_knn(X, y, target_station_coordinates, n_neighbors):
-    neigh = KNeighborsRegressor(n_neighbors=n_neighbors, weights='distance', n_jobs=-1)
+    neigh = KNeighborsRegressor(
+        n_neighbors=n_neighbors, weights='distance', n_jobs=-1)
     neigh.fit(X, y)
     return neigh.predict(target_station_coordinates)
 
@@ -108,7 +113,8 @@ def forecast_day_based_on_kriging(X, y, target_station_coordinates):
         enable_plotting=False,
         nlags=1,
     )
-    z, ss = OK.execute("points", target_station_coordinates[0][0], target_station_coordinates[0][1])
+    z, ss = OK.execute(
+        "points", target_station_coordinates[0][0], target_station_coordinates[0][1])
     return [z[0] + 7.5]
 
 
@@ -144,21 +150,24 @@ def inference(args):
     print("Loading models")
     all_models = load_models(args.weights_folder)
     print("Models loaded")
-    test_dir = os.path.join(config['dataset']['test']['args']['path'], "input/")
+    test_dir = os.path.join(
+        config['dataset']['test']['args']['path'], "input/")
 
     print('Testing...')
     for k_dir in tqdm(os.listdir(test_dir)):
         # load train location coordinates
         if (args.phase == "public-test"):
-            data = pd.read_csv(os.path.join(args.weights_folder, "train-location.csv"))
+            data = pd.read_csv(os.path.join(
+                args.weights_folder, "train-location.csv"))
         else:
-            location_input = os.path.join(test_dir, k_dir, 'location_input.csv')
-            location_output = os.path.join(test_dir, k_dir, 'location_output.csv')
+            location_input = os.path.join(
+                test_dir, k_dir, 'location_input.csv')
+            location_output = os.path.join(
+                test_dir, k_dir, 'location_output.csv')
             data_location_input = pd.read_csv(location_input)
             data_location_output = pd.read_csv(location_output)
             num_target_stations = data_location_output.shape[0]
             data = pd.concat([data_location_input, data_location_output])
-
 
         data.reset_index(inplace=True)
         data = data.assign(T1="", T2="", T3="", T4="", T5="", T6="", T7="", T8="", T9="", T10="", T11="", T12="",
@@ -177,18 +186,21 @@ def inference(args):
 
                 station_name = filename.replace('.csv', '')
 
-                if (args.drop_null_values == True and check_all_null(filepath)) or (station_name not in station_models):
+                if (check_all_null(filepath) or (station_name not in station_models)):
                     data = data.drop(
                         data.index[data['location'] == station_name])
                 else:
                     input_data = load_input_data(filepath, use_lstm)
-                    result = generate_forecast_in_n_hour(station_models[station_name], input_data, use_lstm)
+                    result = generate_forecast_in_n_hour(
+                        station_models[station_name], input_data, use_lstm)
                     data.loc[data['location'] == station_name, -24:] = result
 
             target_stations = data['location'].tolist()[-num_target_stations:]
             for idx, target_station in enumerate(target_stations):
-                lon = data.loc[data['location'] == target_station]['longitude'].tolist()[0]
-                lat = data.loc[data['location'] == target_station]['latitude'].tolist()[0]
+                lon = data.loc[data['location'] == target_station]['longitude'].tolist()[
+                    0]
+                lat = data.loc[data['location'] == target_station]['latitude'].tolist()[
+                    0]
                 target_station_coordinates = [[float(lon), float(lat)]]
 
                 for today in data.columns[3:]:
@@ -199,16 +211,21 @@ def inference(args):
 
                     if args.inference_method == "knn":
                         n_neighbors = config['dataset']['test']['args']['n_neighbor']
-                        prediction = forecast_day_based_on_knn(X, y, target_station_coordinates, n_neighbors)
+                        prediction = forecast_day_based_on_knn(
+                            X, y, target_station_coordinates, n_neighbors)
                     elif args.inference_method == "kriging":
-                        prediction = forecast_day_based_on_kriging(X, y, target_station_coordinates)
+                        prediction = forecast_day_based_on_kriging(
+                            X, y, target_station_coordinates)
                     elif args.inference_method == "idw":
-                        prediction = forecast_day_based_on_idw(X, y, target_station_coordinates)
+                        prediction = forecast_day_based_on_idw(
+                            X, y, target_station_coordinates)
                     else:
                         raise NotImplementedError
-                    data.loc[data['location'] == target_station, today] = prediction
+                    data.loc[data['location'] ==
+                             target_station, today] = prediction
 
-            new_list_df = [data.iloc[i, -24:] for i in range(-num_target_stations, 0)]
+            new_list_df = [data.iloc[i, -24:]
+                           for i in range(-num_target_stations, 0)]
             if (list_df == []):
                 list_df = new_list_df
             else:
@@ -220,5 +237,3 @@ def inference(args):
 if __name__ == '__main__':
     args = get_parser()
     inference(args)
-
-

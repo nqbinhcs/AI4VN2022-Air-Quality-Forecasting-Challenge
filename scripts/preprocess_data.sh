@@ -1,7 +1,7 @@
 python3 -W ignore tools/preprocess_data.py \
---type="private-test" \
---method='mean' \
---data_train_folder_path="data/private-train/raw/" \
---preprocessed_data_train_folder_path="data/private-train/preprocessed/interpolate-method" \
---public_test_folder_path="data/private-test/raw/" \
---preprocessed_public_test_folder_path="data/private-test/preprocessed/mean-method"
+--phase private-test \
+--method mean \
+--train_folder_path="data/private-train/raw" \
+--preprocessed_train_folder_path="data/private-train/preprocessed/mean-method" \
+--test_folder_path="data/private-test/raw" \
+--preprocessed_test_folder_path="data/private-test/preprocessed/mean-method"

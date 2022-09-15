@@ -1,46 +1,20 @@
-# AI4VN 2022 - Air Quality Forecasting Challenge
+# AI4VN2022 - Air Quality Forecasting: Team LQDBD
 
-Cấu trúc repo
-```
-.
-├── README.md
-├── air_forecaster
-│   ├── models
-│   │   ├── ...chứa các class model
-│   ├── trainer.py 
-│   └── utils
-│       ├── dataloader.py
-│       └── getter.py
-├── configs
-│   └── ...chứa các file config .yaml 
-├── data
-│   ├── final-output
-│   ├── final-results
-│   ├── public-test
-│   │   └── raw # chứa tập public test của BTC
-│   └── train
-│       └── raw # chứa tập train của BTC
-├── requirements.txt
-├── saved # lưu file weights ở mỗi lần train
-├── scripts
-│   └── ... các script (.sh) để chạy
-├── setup.py
-├── test.py
-└── tools
-    ├── inference.py
-    ├── inference_drop_empty.py
-    ├── preprocess_data.py
-    └── train.py
-```
+## Our approach
+In this solution, we try to develop several models:
+- [XGBoost](https://github.com/dmlc/xgboost)
+- [CatBoost](https://github.com/catboost/catboost)
+- [LSTM]()
 
-Download dữ liệu cần thiết (data train và public test) rồi để vào các folder ở trên.
+## Reproduce our results
 
-Tiến hành cài đặt các packages
+### Install required packages
 ```
 pip3 install -r requirements.txt
-python3 -m pip install -e .
 ```
+### Data
+We have put all contest data in this repo, you can move to `data/` folder to see its structure and create a custom dataset if you want.
+### Running
+We have provided all essential scripts that you could run to reproduce our results. You can look at these scripts to see the required params (if you want to tinker it).
 
-Sau đó, có thể chỉnh sửa các script hoặc config theo ý muốn rồi tiến hành train/test tùy ý.
-
-
+If you have any issue while running, raise an issue or privately mail [us](mailto:ngtienhung14@gmail.com).

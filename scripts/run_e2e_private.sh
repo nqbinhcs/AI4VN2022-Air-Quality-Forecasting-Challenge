@@ -1,6 +1,3 @@
-# install package
-python3 -m pip install -e .
-
 # preprocess data
 python3 -W ignore tools/preprocess_data.py \
 --phase private-test \

@@ -11,6 +11,7 @@ In this solution, we try to develop several models:
 ### Install required packages
 ```
 pip3 install -r requirements.txt
+python3 -m pip install -e .
 ```
 ### Data
 We have put all contest data in this repo, you can move to `data/` folder to see its structure and create a custom dataset if you want.

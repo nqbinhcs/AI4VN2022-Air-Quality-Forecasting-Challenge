@@ -14,30 +14,16 @@ models:
             gamma: 1
             reg_alpha: 0
             reg_lambda: 1
-    LightGBM:
-        name: 'LightGBM'
-        result_ratio: 0.0
-        args:
-            n_estimators: 200
-            metric: "rmse"
-            num_leaves: 100
-            learning_rate: 0.001
-            bagging_fraction: 0.6
-            feature_fraction: 0.6
-            bagging_frequency: 6
-            bagging_seed: 42
-            verbosity: -1
-            seed: 42
 
 dataset:
     train:
-        name: data-train
+        name: public-train
         args:
-            path: 'data/train/processed/input'
-            split_ratio: 0.22
+            path: 'data/public-train/preprocessed/mean-method'
+            split_ratio: 0.1
         
     test:
         name: public-test
         args:
-            path: 'data/public-test/processed/input'
-            n_neighbor: 4
+            path: 'data/public-test/processed/mean-method'
+            n_neighbor: 5

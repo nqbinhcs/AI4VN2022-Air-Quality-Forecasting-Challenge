@@ -31,13 +31,13 @@ models:
 
 dataset:
     train:
-        name: data-train
+        name: public-train
         args:
-            path: 'data/train/processed/input'
-            split_ratio: 0.22
+            path: 'data/public-train/preprocessed/mean-method'
+            split_ratio: 0.1
         
     test:
         name: public-test
         args:
-            path: 'data/public-test/processed/input'
-            n_neighbor: 4
+            path: 'data/public-test/processed/mean-method'
+            n_neighbor: 5

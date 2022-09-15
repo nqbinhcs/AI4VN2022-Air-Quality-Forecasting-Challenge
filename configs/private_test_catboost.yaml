@@ -16,13 +16,13 @@ models:
 
 dataset:
   train:
-    name: data-train
+    name: private-train
     args:
       path: "data/private-train/preprocessed/mean-method"
-      split_ratio: 0.2
+      split_ratio: 0.22
 
   test:
-    name: public-test
+    name: private-test
     args:
-      path: "data/public-test/processed/input"
-      n_neighbor: 5
+      path: "data/private-test/preprocessed/mean-method"
+      n_neighbor: 4

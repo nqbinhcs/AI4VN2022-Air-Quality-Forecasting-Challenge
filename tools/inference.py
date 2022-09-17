@@ -204,11 +204,9 @@ def inference(args):
                         prediction = forecast_day_based_on_idw(X, y, target_station_coordinates)
                     else:
                         raise NotImplementedError
-                    data.loc[data['location'] ==
-                             target_station, today] = prediction
+                    data.loc[data['location'] == target_station, today] = prediction
 
-            new_list_df = [data.iloc[i, -24:]
-                           for i in range(-num_target_stations, 0)]
+            new_list_df = [data.iloc[i, -24:] for i in range(-num_target_stations, 0)]
             if (list_df == []):
                 list_df = new_list_df
             else:

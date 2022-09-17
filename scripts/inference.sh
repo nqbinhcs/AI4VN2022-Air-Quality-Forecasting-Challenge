@@ -1,5 +1,5 @@
 # Inference using xgboost (current best on private test)
-python3 -W ignore tools/inference_private.py \
+python3 -W ignore tools/inference.py \
 --phase private-test \
 --weights_folder saved/xgboost_best_0 \
 --results_folder data/final-results \

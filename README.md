@@ -17,5 +17,5 @@ python3 -m pip install -e .
 We have put all contest data in this repo, you can move to `data/` folder to see its structure and create a custom dataset if you want.
 ### Running
 We have provided all essential scripts that you could run to reproduce our results. You can look at these scripts to see the required params (if you want to tinker it).
-
+# Contact
 If you have any issue while running, raise an issue or privately mail [us](mailto:ngtienhung14@gmail.com).

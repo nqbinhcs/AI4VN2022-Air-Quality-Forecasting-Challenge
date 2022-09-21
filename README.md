@@ -1,6 +1,7 @@
 # AI4VN2022 - Air Quality Forecasting: Team LQDBD
 
 ## Our approach
+### Presentation: [Slide](https://docs.google.com/presentation/d/1siq1gW3JPnu2Sd4Fcy72_Ygdg8SUryZVG5-LfjXAUZM/edit?usp=sharing)
 ### Pipeline
 <p align="center">
    <img src="images/git_pipeline.png" width="" height="350">

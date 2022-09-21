@@ -1,10 +1,10 @@
 # AI4VN2022 - Air Quality Forecasting: Team LQDBD
 
 ## Our approach
-In this solution, we try to develop several models:
-- [XGBoost](https://github.com/dmlc/xgboost)
-- [CatBoost](https://github.com/catboost/catboost)
-- [LSTM]()
+### Pipeline
+<p align="center">
+   <img src="images/git_pipeline.png" width="" height="350">
+</p>
 
 ## Reproduce our results
 

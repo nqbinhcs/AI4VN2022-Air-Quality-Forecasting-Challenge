@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
-class BaseModel():
+
+class BaseModel:
     @abstractmethod
     def fit(self, *inputs):
         raise NotImplementedError
@@ -12,7 +13,7 @@ class BaseModel():
     @abstractmethod
     def load_model(self, *inputs):
         raise NotImplementedError
-    
+
     @abstractmethod
     def predict(self, *inputs):
         raise NotImplementedError

@@ -7,11 +7,7 @@ class CatBoost(BaseModel):
         self.model = cb.CatBoostRegressor(**parameters)
 
     def fit(self, X, y, eval_set, early_stopping_rounds):
-        self.model.fit(X, y,
-                       eval_set=eval_set,
-                       use_best_model=True,
-                       verbose=50
-                       )
+        self.model.fit(X, y, eval_set=eval_set, use_best_model=True, verbose=50)
 
     def save_model(self, save_dir_model):
         self.model.save_model(save_dir_model, format="json")

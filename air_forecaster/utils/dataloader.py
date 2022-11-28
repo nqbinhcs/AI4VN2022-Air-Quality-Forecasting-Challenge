@@ -23,9 +23,9 @@ def load_data(data_path, test_size, is_full=False):
 
     if is_full:
         df = pd.read_csv(data_path)
-        pm = df['PM2.5'].values
-        humidity = df['humidity'].values
-        temperature = df['temperature'].values
+        pm = df["PM2.5"].values
+        humidity = df["humidity"].values
+        temperature = df["temperature"].values
         # reshape
         pm = pm.reshape((pm.shape[0], 1))
         humidity = humidity.reshape((humidity.shape[0], 1))
@@ -39,7 +39,8 @@ def load_data(data_path, test_size, is_full=False):
 
         # Split with ratio
         X_train, X_valid, y_train, y_valid = train_test_split(
-            X_data, y_data, test_size=test_size, shuffle=False)
+            X_data, y_data, test_size=test_size, shuffle=False
+        )
 
         print(X_data.shape, y_data.shape)
         print(X_train.shape, y_train.shape)
@@ -50,15 +51,16 @@ def load_data(data_path, test_size, is_full=False):
     else:
         # Load X, Y
         df = pd.read_csv(data_path)
-        data = df['PM2.5'].values
+        data = df["PM2.5"].values
         X_data = []
         y_data = []
         for i in range(len(data) - 169):
-            X_data.append(data[i:i+168])
-            y_data.append(data[i+168])
+            X_data.append(data[i : i + 168])
+            y_data.append(data[i + 168])
 
         # Split with ratio
         X_train, X_valid, y_train, y_valid = train_test_split(
-            np.array(X_data), np.array(y_data), test_size=test_size, shuffle=False)
+            np.array(X_data), np.array(y_data), test_size=test_size, shuffle=False
+        )
 
         return X_train, X_valid, y_train, y_valid

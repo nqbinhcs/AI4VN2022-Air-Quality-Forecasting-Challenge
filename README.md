@@ -19,4 +19,4 @@ We have put all contest data in this repo, you can move to `data/` folder to see
 ### Running
 We have provided all essential scripts `scripts/` that you could run to reproduce our results. You can look at these scripts to see the required params (if you want to tinker it).
 # Contact
-If you have any issue while running, raise an issue or privately mail [us](mailto:ngtienhung14@gmail.com).
+If you have any issue while running, raise an issue or privately mail [nqbinhcs](mailto:nqbinh.forwork@gmail.com), [hungnt14](mailto:ngtienhung14@gmail.com).
